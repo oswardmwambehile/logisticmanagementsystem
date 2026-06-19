@@ -1,0 +1,126 @@
+{% extends "customers/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- PAGE WRAPPER -->
+<div class="min-h-screen bg-white flex items-center justify-center px-4 py-10">
+
+    <!-- CENTER CONTAINER -->
+    <div class="w-full max-w-md">
+
+        <!-- HEADER -->
+        <div class="text-center mb-6">
+            <h1 class="text-3xl text-gray-900">
+                Signup to Our platform
+            </h1>
+            
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 text-sm px-3 py-2 rounded border
+                        {% if message.tags == 'success' %}
+                            bg-green-50 border-green-200 text-green-700
+                        {% else %}
+                            bg-red-50 border-red-200 text-red-700
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="text-sm text-red-600 bg-red-50 border border-red-200 p-3 rounded">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- EMAIL -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Email</label>
+                    {{ form.email }}
+
+                    {% for error in form.email.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- FIRST NAME -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">First name</label>
+                    {{ form.first_name }}
+
+                    {% for error in form.first_name.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- LAST NAME -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Last name</label>
+                    {{ form.last_name }}
+                    {% for error in form.last_name.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- PHONE -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Phone</label>
+                    {{ form.phone }}
+                    {% for error in form.phone.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- PASSWORD -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Password</label>
+                    {{ form.password1 }}
+                    {% for error in form.password1.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- CONFIRM PASSWORD -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Confirm password</label>
+                    {{ form.password2 }}
+                    {% for error in form.password2.errors %}
+                        <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- BUTTON -->
+                <button
+                    type="submit"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-md text-sm font-medium transition"
+                >
+                    Create account
+                </button>
+
+            </form>
+        </div>
+
+        <!-- FOOTER -->
+        <p class="text-center text-sm text-gray-600 mt-4">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-blue-600 hover:underline">
+                Sign in
+            </a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

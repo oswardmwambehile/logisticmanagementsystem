@@ -1,0 +1,66 @@
+{% extends "customers/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+<div class="min-h-screen flex items-center justify-center px-4">
+
+    <div class="w-full max-w-md">
+
+        <!-- TITLE -->
+        <div class="text-center mb-6">
+            <h1 class="text-3xl text-gray-900">
+                Signin to your Platform
+            </h1>
+            
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 text-sm px-3 py-2 rounded border bg-red-50 border-red-200 text-red-700">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
+
+                <!-- EMAIL -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Email</label>
+                    {{ form.username }}
+                </div>
+
+                <!-- PASSWORD -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Password</label>
+                    {{ form.password }}
+                </div>
+
+                <!-- BUTTON -->
+                <button type="submit"
+                    class="w-full bg-green-700 text-white py-2.5 rounded-md hover:bg-green-800 transition">
+                    Sign in
+                </button>
+
+            </form>
+        </div>
+
+        <!-- FOOTER -->
+        <p class="text-center text-sm text-gray-600 mt-4">
+            Don’t have an account?
+            <a href="{% url 'register' %}" class="text-blue-600 hover:underline">
+                Register
+            </a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

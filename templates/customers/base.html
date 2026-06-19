@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Prince International</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class=" m-0 p-0">
+
+  <!-- Main container -->
+    {% block content %}
+    
+    {% endblock %}
+
+
+  
+
+  <!-- Flowbite JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sidebar = document.getElementById("logo-sidebar");
+    const toggleBtn = document.getElementById("sidebarToggle");
+    const closeBtn = document.getElementById("sidebarClose");
+    const overlay = document.getElementById("sidebar-overlay");
+
+    if (!sidebar || !toggleBtn || !overlay) {
+        console.log("Sidebar elements missing");
+        return;
+    }
+
+    // OPEN SIDEBAR
+    function openSidebar() {
+        sidebar.classList.remove("-translate-x-full");
+        overlay.classList.remove("hidden");
+    }
+
+    // CLOSE SIDEBAR
+    function closeSidebar() {
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+    }
+
+    // TOGGLE BUTTON
+    toggleBtn.addEventListener("click", function () {
+        if (sidebar.classList.contains("-translate-x-full")) {
+            openSidebar();
+        } else {
+            closeSidebar();
+        }
+    });
+
+    // CLOSE BUTTON (X)
+    closeBtn?.addEventListener("click", closeSidebar);
+
+    // CLICK OUTSIDE (OVERLAY)
+    overlay.addEventListener("click", closeSidebar);
+
+});
+</script>
+</body>
+</html>

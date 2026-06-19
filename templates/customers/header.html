@@ -1,0 +1,112 @@
+{% load static %}
+
+<header>
+<nav class="bg-white border-b border-gray-200 fixed w-full z-50 top-0 left-0">
+
+    <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
+
+        <!-- LOGO -->
+        <a href="{% url 'home' %}" class="flex items-center space-x-3">
+            <img src="{% static 'img/logog.png' %}" class="h-8" alt="Logo">
+            <span class="text-xl font-semibold text-gray-800">
+                LOGISTICS MANAGEMENT SYSTEM
+            </span>
+        </a>
+
+        <!-- MENU -->
+        <div class="flex items-center space-x-6">
+
+            <a href="{% url 'home' %}" class="text-gray-700 hover:text-black text-sm font-medium">
+                Home
+            </a>
+
+            <a href="#" class="text-gray-700 hover:text-black text-sm font-medium">
+                About
+            </a>
+
+            <a href="#" class="text-gray-700 hover:text-black text-sm font-medium">
+                Products
+            </a>
+
+            <!-- IF USER IS LOGGED IN -->
+            {% if user.is_authenticated %}
+
+                <!-- PROFILE DROPDOWN -->
+                <div class="relative">
+
+                    <!-- BUTTON -->
+                    <button onclick="toggleDropdown()"
+                        class="flex items-center space-x-2 text-sm font-medium text-gray-800 hover:text-black">
+
+                        <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-bold">
+                            {{ user.first_name|default:user.email|slice:":1" }}
+                        </div>
+
+                        <span>
+                            {{ user.first_name }} {{ user.last_name }}
+                        </span>
+
+                    </button>
+
+                    <!-- DROPDOWN (FIXED) -->
+                    <div id="profileDropdown"
+                         class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
+
+                        <div class="px-4 py-2 text-sm text-gray-700 border-b">
+                            Signed in as<br>
+                            <span class="font-semibold">
+                                 {{ user.first_name }} {{ user.last_name }}
+                            </span>
+                        </div>
+
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Profile
+                        </a>
+
+                        <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                            Logout
+                        </a>
+
+                    </div>
+                </div>
+
+            {% else %}
+
+                <!-- LOGIN / REGISTER -->
+                <a href="{%url 'login' %}"
+                   class="text-sm font-medium bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800">
+                    Login
+                </a>
+
+                <a href="{% url 'register' %}"
+                   class="text-sm font-medium bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800">
+                    Register
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</nav>
+</header>
+
+<!-- FIX SCRIPT (ADD BELOW HEADER OR IN base.html) -->
+<script>
+function toggleDropdown() {
+    const menu = document.getElementById("profileDropdown");
+
+    menu.classList.toggle("hidden");
+}
+
+// close when clicking outside
+document.addEventListener("click", function(event) {
+    const menu = document.getElementById("profileDropdown");
+    const button = event.target.closest("button");
+
+    if (!event.target.closest("#profileDropdown") && !button) {
+        menu.classList.add("hidden");
+    }
+});
+</script>
