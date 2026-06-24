@@ -1,0 +1,239 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
+            <div>
+
+                <h1 class="text-3xl font-bold text-gray-900">
+                    Driver Details
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    Complete driver profile and vehicle information.
+                </p>
+
+            </div>
+
+            <div class="flex gap-3">
+
+                <a href=""
+                   class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl">
+
+                    Edit Driver
+
+                </a>
+
+                <a href="{% url 'driver_list' %}"
+                   class="px-5 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl">
+
+                    Back
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- PROFILE CARD -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden mb-6">
+
+            <div class="p-8">
+
+                <div class="flex items-center gap-5">
+
+                    <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
+
+                        <i class="fa fa-user text-3xl text-blue-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            {{ driver.first_name }} {{ driver.last_name }}
+                        </h2>
+
+                        <p class="text-gray-500">
+                            {{ driver.email }}
+                        </p>
+
+                        {% if driver.is_available %}
+                        <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                            Available
+                        </span>
+                        {% else %}
+                        <span class="inline-block mt-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">
+                            Busy
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+
+            <!-- PERSONAL INFO -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-sm">
+
+                <div class="border-b px-6 py-4">
+
+                    <h3 class="font-semibold text-gray-800">
+                        Personal Information
+                    </h3>
+
+                </div>
+
+                <div class="p-6 space-y-5">
+
+                    <div>
+                        <p class="text-sm text-gray-500">First Name</p>
+                        <p class="font-medium">{{ driver.first_name }}</p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Last Name</p>
+                        <p class="font-medium">{{ driver.last_name }}</p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Email</p>
+                        <p class="font-medium">{{ driver.email }}</p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Phone</p>
+                        <p class="font-medium">
+                            {{ driver.phone|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Address</p>
+                        <p class="font-medium">
+                            {{ driver.address|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Joined</p>
+                        <p class="font-medium">
+                            {{ driver.created_at|date:"d M Y" }}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- LICENSE INFO -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-sm">
+
+                <div class="border-b px-6 py-4">
+
+                    <h3 class="font-semibold text-gray-800">
+                        License Information
+                    </h3>
+
+                </div>
+
+                <div class="p-6">
+
+                    <div>
+                        <p class="text-sm text-gray-500">
+                            Driving License Number
+                        </p>
+
+                        <p class="font-medium">
+                            {{ driver.license_number|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- VEHICLE SECTION -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm mt-6">
+
+            <div class="border-b px-6 py-4">
+
+                <h3 class="font-semibold text-gray-800">
+                    Vehicle Information
+                </h3>
+
+            </div>
+
+            <div class="p-6">
+
+                <div class="grid md:grid-cols-3 gap-6">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Vehicle Name</p>
+                        <p class="font-medium">
+                            {{ driver.vehicle_name|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Vehicle Type</p>
+                        <p class="font-medium">
+                            {{ driver.get_vehicle_type_display|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Vehicle Model</p>
+                        <p class="font-medium">
+                            {{ driver.vehicle_model|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Vehicle Color</p>
+                        <p class="font-medium">
+                            {{ driver.vehicle_color|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Capacity</p>
+                        <p class="font-medium">
+                            {{ driver.vehicle_capacity|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Registration Number</p>
+                        <p class="font-medium">
+                            {{ driver.vehicle_number|default:"Not Provided" }}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

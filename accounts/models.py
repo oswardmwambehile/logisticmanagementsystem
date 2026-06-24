@@ -65,6 +65,56 @@ class User(AbstractUser):
     # =========================
     license_number = models.CharField(max_length=100, blank=True, null=True)
     vehicle_number = models.CharField(max_length=100, blank=True, null=True)
+
+    vehicle_name = models.CharField(
+            max_length=150,
+            blank=True,
+            null=True
+        )
+
+    VEHICLE_TYPES = (
+        ("TRUCK", "Truck"),
+        ("PICKUP", "Pickup"),
+        ("TRAILER", "Trailer"),
+        ("VAN", "Van"),
+        ("MOTORCYCLE", "Motorcycle"),
+    )
+
+    vehicle_type = models.CharField(
+        max_length=30,
+        choices=VEHICLE_TYPES,
+        blank=True,
+        null=True
+    )
+
+    
+    vehicle_model = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    vehicle_color = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+
+
+    vehicle_capacity = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Example: 5 Tons"
+    )
+
+   
+    address = models.TextField(
+        blank=True,
+        null=True
+    )
+
     is_available = models.BooleanField(default=True)
 
     # =========================

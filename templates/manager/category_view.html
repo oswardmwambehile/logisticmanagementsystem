@@ -1,0 +1,302 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<!-- MAIN CONTENT -->
+<div class="sm:ml-64 mt-16 px-4 py-5 min-h-screen">
+
+    <div class="w-full">
+
+        <!-- HEADER -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Material Categories
+                </h1>
+            </div>
+
+            <!-- ADD BUTTON -->
+            <button
+                onclick="openCreateModal()"
+                class="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white text-sm font-medium px-5 py-2.5 rounded-xl shadow-sm transition">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Category
+
+            </button>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="relative overflow-x-auto bg-white rounded-2xl border border-gray-200 shadow-sm">
+
+            <div class="px-6 py-5 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Category List
+                </h2>
+            </div>
+
+            <table class="w-full text-sm text-left text-gray-600">
+
+                <thead class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500">
+
+                    <tr>
+                        <th class="px-6 py-4 font-semibold">Name</th>
+                        <th class="px-6 py-4 font-semibold">Description</th>
+                        <th class="px-6 py-4 font-semibold text-center">Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if categories %}
+
+                        {% for cat in categories %}
+
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+
+                            <!-- NAME -->
+                            <td class="px-6 py-4 font-medium text-gray-800">
+                                {{ cat.name }}
+                            </td>
+
+                            <!-- DESCRIPTION -->
+                            <td class="px-6 py-4">
+                                {{ cat.description }}
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="px-6 py-4">
+
+                                <div class="flex items-center justify-center gap-2">
+
+                                    <!-- EDIT -->
+                                    <button
+                                        onclick="openEditModal(
+                                            '{{ cat.id }}',
+                                            '{{ cat.name }}',
+                                            `{{ cat.description }}`
+                                        )"
+                                        class="inline-flex items-center gap-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 py-2 rounded-xl text-xs font-medium transition">
+
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        Edit
+
+                                    </button>
+
+                                    <!-- DELETE -->
+                                    <form method="POST">
+
+                                        {% csrf_token %}
+
+                                        <input type="hidden" name="category_id" value="{{ cat.id }}">
+
+                                        <button
+                                            type="submit"
+                                            name="delete_category"
+                                            onclick="return confirm('Delete this category?')"
+                                            class="inline-flex items-center gap-2 bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl text-xs font-medium transition">
+
+                                            <i class="fa-solid fa-trash"></i>
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                    <!-- EMPTY -->
+                    <tr>
+                        <td colspan="3" class="px-6 py-20 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <i class="fa-solid fa-tags text-5xl text-gray-300 mb-4"></i>
+
+                                <h2 class="text-lg font-semibold text-gray-700">
+                                    No Categories Found
+                                </h2>
+
+                                <p class="text-sm text-gray-400 mt-1">
+                                    Add your first material category
+                                </p>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= CREATE MODAL ================= -->
+<div id="createModal" class="fixed inset-0 hidden items-center justify-center z-50 px-4 bg-black/30">
+
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 animate-modal">
+
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Add Category
+            </h2>
+
+            <button onclick="closeCreateModal()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100">
+                <i class="fa-solid fa-xmark text-gray-600"></i>
+            </button>
+
+        </div>
+
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Category Name</label>
+                {{ form.name }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Description</label>
+                {{ form.description }}
+            </div>
+
+            <div class="flex justify-end">
+
+                <button type="submit" name="create_category"
+                        class="bg-green-700 hover:bg-green-800 text-white px-6 py-2.5 rounded-xl">
+
+                    <i class="fa fa-save"></i> Save
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ================= EDIT MODAL ================= -->
+<div id="editModal" class="fixed inset-0 hidden items-center justify-center z-50 px-4 bg-black/30">
+
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 animate-modal">
+
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Edit Category
+            </h2>
+
+            <button onclick="closeEditModal()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100">
+                <i class="fa-solid fa-xmark text-gray-600"></i>
+            </button>
+
+        </div>
+
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="category_id" id="edit_id">
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Category Name</label>
+                <input type="text" name="name" id="edit_name"
+                       class="w-full border rounded-xl px-4 py-2.5">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Description</label>
+                <textarea name="description" id="edit_description"
+                          class="w-full border rounded-xl px-4 py-2.5"></textarea>
+            </div>
+
+            <div class="flex justify-end">
+
+                <button type="submit" name="update_category"
+                        class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl">
+
+                    <i class="fa fa-pen"></i> Update
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+
+function openCreateModal(){
+    document.getElementById('createModal').classList.remove('hidden');
+    document.getElementById('createModal').classList.add('flex');
+}
+
+function closeCreateModal(){
+    document.getElementById('createModal').classList.add('hidden');
+    document.getElementById('createModal').classList.remove('flex');
+}
+
+function openEditModal(id, name, description){
+
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_description').value = description;
+
+    document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editModal').classList.add('flex');
+}
+
+function closeEditModal(){
+    document.getElementById('editModal').classList.add('hidden');
+    document.getElementById('editModal').classList.remove('flex');
+}
+
+</script>
+
+<style>
+
+@keyframes modalFade {
+    from { opacity: 0; transform: translateY(20px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-modal {
+    animation: modalFade 0.25s ease;
+}
+
+</style>
+
+{% endblock %}

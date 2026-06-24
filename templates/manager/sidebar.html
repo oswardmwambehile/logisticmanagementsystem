@@ -1,0 +1,161 @@
+<!-- SIDEBAR -->
+<aside id="logo-sidebar"
+    class="fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200
+           transform -translate-x-full transition-transform duration-300 ease-in-out
+           lg:translate-x-0">
+
+    <!-- MOBILE HEADER (LOGO + CLOSE) -->
+    <div class="flex items-center justify-between px-4 py-4 border-b lg:hidden">
+
+        <h2 class=" text-gray-700">Sales Dashboard</h2>
+
+        <button id="sidebarClose"
+            class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100">
+            <i class="fa-solid fa-xmark text-lg text-gray-600"></i>
+        </button>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="h-full px-4 pb-6 overflow-y-auto pt-4 lg:pt-6">
+
+        <!-- TITLE (desktop only) -->
+        <div class="mb-6 px-3 hidden lg:block">
+            <h2 class=" text-gray-500 ">
+                Sales Dashboard
+            </h2>
+        </div>
+
+        <ul class="space-y-2 font-medium">
+
+            <li>
+                <a href="{% url 'admin_dashboard' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- MATERIALS MANAGEMENT -->
+<li>
+
+    <!-- BUTTON -->
+    <button
+        type="button"
+        class="flex items-center justify-between w-full px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
+        aria-controls="materials-dropdown"
+        data-collapse-toggle="materials-dropdown">
+
+        <div class="flex items-center gap-3">
+
+            <i class="fa-solid fa-boxes-stacked text-base"></i>
+
+            <span>Materials Management</span>
+
+        </div>
+
+        <!-- ARROW -->
+        <i class="fa-solid fa-chevron-down text-xs"></i>
+
+    </button>
+
+    <!-- DROPDOWN -->
+    <ul id="materials-dropdown" class="hidden py-2 pl-4 space-y-2">
+
+        <!-- CATEGORIES -->
+        <li>
+            <a href="{%url 'category_view' %}"
+               class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                <i class="fa-solid fa-tags text-sm"></i>
+
+                Material Categories
+
+            </a>
+        </li>
+
+        <!-- MATERIALS -->
+        <li>
+            <a href="{%url 'material_list'%}"
+               class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                <i class="fa-solid fa-cubes text-sm"></i>
+
+                Materials
+
+            </a>
+        </li>
+
+        <!-- STOCK MOVEMENT -->
+        <li>
+            <a href="{%url 'stock_movement_list' %}"
+               class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                <i class="fa-solid fa-right-left text-sm"></i>
+
+                Stock Movement
+
+            </a>
+        </li>
+
+     
+
+    </ul>
+
+</li>
+
+            <li>
+                <a href="{%url 'driver_list' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Manage Drivers</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{%url 'admin_pending_orders' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-box"></i>
+                    <span>Pending Orders</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{%url 'admin_assigned_orders' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-box"></i>
+                    <span>Assigned Orders</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{%url 'admin_on_route_orders' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-box"></i>
+                    <span>On route Orders</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{%url 'admin_delivered_orders' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-box"></i>
+                    <span>Delivered Orders</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{%url 'admin_customer_list' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Available Customer</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</aside>
+
+<!-- OVERLAY -->
+<div id="sidebar-overlay"
+     class="fixed inset-0 bg-black/40 hidden z-40 lg:hidden"></div>

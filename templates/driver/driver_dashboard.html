@@ -1,0 +1,118 @@
+{% extends 'driver/base.html' %}
+
+{% block content %}
+
+{% include 'driver/nav.html' %}
+{% include 'driver/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10 ">
+
+    <!-- HEADER -->
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+            Driver Dashboard
+        </h1>
+        <p class="text-gray-500 text-sm">
+            Overview of your deliveries and earnings
+        </p>
+    </div>
+
+    <!-- STATS CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+        <div class="bg-white p-6 rounded-2xl shadow">
+            <p class="text-gray-500 text-sm">Assigned Orders</p>
+            <h2 class="text-3xl font-bold text-blue-600">
+                {{ assigned_orders }}
+            </h2>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow">
+            <p class="text-gray-500 text-sm">On Route</p>
+            <h2 class="text-3xl font-bold text-yellow-600">
+                {{ on_route_orders }}
+            </h2>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow">
+            <p class="text-gray-500 text-sm">Delivered</p>
+            <h2 class="text-3xl font-bold text-green-600">
+                {{ delivered_orders }}
+            </h2>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow">
+            <p class="text-gray-500 text-sm">Revenue</p>
+            <h2 class="text-3xl font-bold text-red-600">
+                TZS {{ revenue|floatformat:2 }}
+            </h2>
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+        <!-- PIE CHART -->
+        <div class="bg-white p-6 rounded-2xl shadow">
+
+            <h2 class="text-lg font-bold mb-4">Order Status</h2>
+
+            <canvas id="pieChart"></canvas>
+
+        </div>
+
+        <!-- LINE CHART -->
+        <div class="bg-white p-6 rounded-2xl shadow">
+
+            <h2 class="text-lg font-bold mb-4">Delivery Trend</h2>
+
+            <canvas id="lineChart"></canvas>
+
+        </div>
+
+    </div>
+
+   
+</div>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // PIE CHART
+    new Chart(document.getElementById('pieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Assigned', 'On Route', 'Delivered'],
+            datasets: [{
+                data: [
+                    {{ assigned_orders }},
+                    {{ on_route_orders }},
+                    {{ delivered_orders }}
+                ],
+                backgroundColor: ['#3b82f6', '#facc15', '#22c55e']
+            }]
+        }
+    });
+
+    // LINE CHART
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: {
+            labels: ['Assigned', 'On Route', 'Delivered'],
+            datasets: [{
+                label: 'Performance',
+                data: [
+                    {{ assigned_orders }},
+                    {{ on_route_orders }},
+                    {{ delivered_orders }}
+                ],
+                borderColor: '#3b82f6',
+                fill: false
+            }]
+        }
+    });
+</script>
+
+{% endblock %}

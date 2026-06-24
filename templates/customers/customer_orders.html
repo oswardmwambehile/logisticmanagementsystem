@@ -1,0 +1,260 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+{% include 'customers/header.html' %}
+
+<div class="min-h-screen  pt-24 pb-10">
+
+    <div class="max-w-6xl mx-auto px-4">
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">
+                Your Orders
+            </h1>
+            <p class="text-sm text-gray-500">
+                View and track all your purchases
+            </p>
+        </div>
+
+        <div class="space-y-6">
+
+            {% for order in orders %}
+
+            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="bg-gray-50 px-6 py-4 border-b">
+
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+
+                        <div>
+                            <p class="text-xs uppercase text-gray-500">
+                                Order Placed
+                            </p>
+
+                            <p class="font-semibold text-gray-800">
+                                {{ order.created_at|date:"M d, Y H:i" }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs uppercase text-gray-500">
+                                Order Number
+                            </p>
+
+                            <p class="font-semibold text-gray-800">
+                                #{{ order.id }}
+                            </p>
+                        </div>
+
+                        <div>
+
+                            {% if order.status == "PENDING" %}
+                            <span class="px-4 py-2 rounded-full bg-red-800 text-white text-lg font-medium">
+                                Pending
+                            </span>
+
+                            {% elif order.status == "ASSIGNED" %}
+                            <span class="px-4 py-2 rounded-full bg-blue-800 text-white text-lg font-medium">
+                                Assigned
+                            </span>
+
+                            {% elif order.status == "ON_ROUTE" %}
+                            <span class="px-4 py-2 rounded-full bg-indigo-800 text-white text-lg font-medium">
+                                On Route
+                            </span>
+
+                            {% elif order.status == "DELIVERED" %}
+                            <span class="px-4 py-2 rounded-full bg-green-800 text-white text-lg font-medium">
+                                Delivered
+                            </span>
+
+                            {% elif order.status == "CANCELLED" %}
+                            <span class="px-4 py-2 rounded-full bg-red-800 text-rwhite text-lg font-medium">
+                                Cancelled
+                            </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- TRACKING -->
+                <div class="px-6 py-5 border-b">
+
+                    <h3 class="font-semibold text-gray-800 mb-4">
+                        Order Tracking
+                    </h3>
+
+                    <div class="grid grid-cols-4 gap-4 text-center">
+
+                        <div>
+                            <div class="w-12 h-12 mx-auto rounded-full bg-green-500 text-white flex items-center justify-center">
+                                ✓
+                            </div>
+                            <p class="text-xs mt-2">Placed</p>
+                        </div>
+
+                        <div>
+                            <div class="w-12 h-12 mx-auto rounded-full flex items-center justify-center {% if order.status == 'ASSIGNED' or order.status == 'ON_ROUTE' or order.status == 'DELIVERED' %}bg-green-500 text-white{% else %}bg-gray-300 text-gray-600{% endif %}">
+                                ✓
+                            </div>
+                            <p class="text-xs mt-2">Assigned</p>
+                        </div>
+
+                        <div>
+                            <div class="w-12 h-12 mx-auto rounded-full flex items-center justify-center {% if order.status == 'ON_ROUTE' or order.status == 'DELIVERED' %}bg-green-500 text-white{% else %}bg-gray-300 text-gray-600{% endif %}">
+                                🚚
+                            </div>
+                            <p class="text-xs mt-2">On Route</p>
+                        </div>
+
+                        <div>
+                            <div class="w-12 h-12 mx-auto rounded-full flex items-center justify-center {% if order.status == 'DELIVERED' %}bg-green-500 text-white{% else %}bg-gray-300 text-gray-600{% endif %}">
+                                ✓
+                            </div>
+                            <p class="text-xs mt-2">Delivered</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DELIVERY ADDRESS -->
+                <div class="px-6 py-5 border-b">
+
+                    <h3 class="font-semibold text-gray-800 mb-3">
+                        Delivery Address
+                    </h3>
+
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <p>{{ order.delivery_address }}</p>
+
+                        {% if order.location %}
+                        <p class="text-sm text-gray-500 mt-2">
+                            {{ order.location }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <!-- DRIVER -->
+                <div class="px-6 py-5 border-b">
+
+                    <h3 class="font-semibold text-gray-800 mb-4">
+                        Driver Information
+                    </h3>
+
+                    {% if order.driver %}
+
+                    <div class="grid md:grid-cols-2 gap-4">
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p><strong>Name:</strong> {{ order.driver.first_name }} {{ order.driver.last_name }}</p>
+                            <p><strong>Phone:</strong> {{ order.driver.phone }}</p>
+                            <p><strong>License:</strong> {{ order.driver.license_number }}</p>
+                            <p><strong>Vehicle Number:</strong> {{ order.driver.vehicle_number }}</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p><strong>Vehicle Name:</strong> {{ order.driver.vehicle_name|default:"N/A" }}</p>
+                            <p><strong>Vehicle Type:</strong> {{ order.driver.get_vehicle_type_display|default:"N/A" }}</p>
+                            <p><strong>Vehicle Model:</strong> {{ order.driver.vehicle_model|default:"N/A" }}</p>
+                            <p><strong>Color:</strong> {{ order.driver.vehicle_color|default:"N/A" }}</p>
+                            <p><strong>Capacity:</strong> {{ order.driver.vehicle_capacity|default:"N/A" }}</p>
+                        </div>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-700">
+                        Waiting for driver assignment.
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+                <!-- ITEMS -->
+                <div class="px-6 py-5">
+
+                    {% for item in order.items.all %}
+
+                    <div class="flex gap-4 py-4 border-b last:border-b-0">
+
+                        <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
+
+                            {% if item.material.image %}
+                            <img src="{{ item.material.image.url }}"
+                                 class="w-full h-full object-cover">
+                            {% else %}
+                            <img src="{% static 'img/default-material.jpg' %}"
+                                 class="w-full h-full object-cover">
+                            {% endif %}
+
+                        </div>
+
+                        <div class="flex-1">
+
+                            <h3 class="font-semibold text-gray-800">
+                                {{ item.material.name }}
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+                                Quantity: {{ item.quantity }} {{ item.material.unit }}
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                Unit Price: {{ item.unit_price|floatformat:2|intcomma }} TZS
+                            </p>
+
+                        </div>
+
+                        <div class="text-right">
+                            <p class="font-bold text-green-700">
+                                {{ item.subtotal|floatformat:2|intcomma }} TZS
+                            </p>
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- TOTAL -->
+                <div class="bg-gray-50 px-6 py-4">
+
+                    <p class="text-sm text-gray-500">
+                        Order Total
+                    </p>
+
+                    <p class="text-xl font-bold text-green-700">
+                        {{ order.total|floatformat:2|intcomma }} TZS
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="bg-white p-10 rounded-xl text-center text-gray-500 shadow-sm">
+                You have not placed any orders yet.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

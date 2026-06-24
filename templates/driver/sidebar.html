@@ -1,0 +1,85 @@
+<!-- SIDEBAR -->
+<aside id="logo-sidebar"
+    class="fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200
+           transform -translate-x-full transition-transform duration-300 ease-in-out
+           lg:translate-x-0">
+
+    <!-- MOBILE HEADER -->
+    <div class="flex items-center justify-between px-4 py-4 border-b lg:hidden">
+
+        <h2 class="text-gray-700 font-semibold">Driver Dashboard</h2>
+
+        <button id="sidebarClose"
+            class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100">
+            <i class="fa-solid fa-xmark text-lg text-gray-600"></i>
+        </button>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="h-full px-4 pb-6 overflow-y-auto pt-4 lg:pt-6">
+
+        <!-- TITLE -->
+        <div class="mb-6 px-3 hidden lg:block">
+            <h2 class="text-gray-500 font-semibold">
+                Driver Dashboard
+            </h2>
+        </div>
+
+        <ul class="space-y-2 font-medium">
+
+            <!-- HOME -->
+            <li>
+                <a href="{% url 'driver_dashboard' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-gauge"></i>
+                    <span>Overview</span>
+                </a>
+            </li>
+
+            <!-- ASSIGNED ORDERS -->
+            <li>
+                <a href="{%url 'driver_assigned_orders'%}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-truck"></i>
+                    <span>Assigned Orders</span>
+                </a>
+            </li>
+
+            <!-- IN TRANSIT -->
+            <li>
+                <a href="{%url 'driver_on_route_orders' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-road"></i>
+                    <span>On route Orders</span>
+                </a>
+            </li>
+
+            <!-- DELIVERED -->
+            <li>
+                <a href="{%url 'driver_delivered_orders'%}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Delivered Orders</span>
+                </a>
+            </li>
+
+            <!-- DELIVERY HISTORY -->
+            
+
+            <!-- PROFILE -->
+            <li>
+                <a href="{%url 'driver_profile' %}"
+                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</aside>
+
+<!-- OVERLAY -->
+<div id="sidebar-overlay"
+     class="fixed inset-0 bg-black/40 hidden z-40 lg:hidden"></div>

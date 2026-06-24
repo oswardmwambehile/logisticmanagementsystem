@@ -1,0 +1,251 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
+        <div>
+
+            <h1 class="text-2xl font-semibold text-gray-800">
+                Drivers
+            </h1>
+
+            <p class="text-sm text-gray-500 mt-1">
+                Total Drivers: {{ drivers|length }}
+            </p>
+
+        </div>
+
+        <a href="{% url 'driver_create' %}"
+           class="inline-flex items-center gap-2 px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-sm">
+
+            <i class="fa fa-plus"></i>
+
+            Add Driver
+
+        </a>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full min-w-[1400px]">
+
+                <thead class="bg-gray-100 text-xs uppercase text-gray-600">
+
+                    <tr>
+
+                        <th class="px-6 py-4 text-left">Driver</th>
+                        <th class="px-6 py-4 text-left">Phone</th>
+                        <th class="px-6 py-4 text-left">License</th>
+                        <th class="px-6 py-4 text-left">Vehicle</th>
+                        <th class="px-6 py-4 text-left">Type</th>
+                        <th class="px-6 py-4 text-left">Plate Number</th>
+                        <th class="px-6 py-4 text-left">Capacity</th>
+                        <th class="px-6 py-4 text-left">Status</th>
+                        <th class="px-6 py-4 text-center">Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for driver in drivers %}
+
+                    <tr class="border-b hover:bg-gray-50">
+
+                        <!-- DRIVER -->
+                        <td class="px-6 py-4">
+
+                            <div>
+
+                                <p class="font-semibold text-gray-800">
+                                    {{ driver.first_name }} {{ driver.last_name }}
+                                </p>
+
+                                <p class="text-sm text-gray-500">
+                                    {{ driver.email }}
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                        <!-- PHONE -->
+                        <td class="px-6 py-4 text-gray-700">
+                            {{ driver.phone }}
+                        </td>
+
+                        <!-- LICENSE -->
+                        <td class="px-6 py-4 text-gray-700">
+                            {{ driver.license_number }}
+                        </td>
+
+                        <!-- VEHICLE -->
+                        <td class="px-6 py-4 text-gray-700">
+                            {{ driver.vehicle_name }}
+                        </td>
+
+                        <!-- TYPE -->
+                        <td class="px-6 py-4 text-gray-700">
+                            {{ driver.get_vehicle_type_display }}
+                        </td>
+
+                        <!-- PLATE -->
+                        <td class="px-6 py-4 text-gray-700">
+                            {{ driver.vehicle_number }}
+                        </td>
+
+                        <!-- CAPACITY -->
+                        <td class="px-6 py-4 text-gray-700">
+                            {{ driver.vehicle_capacity }}
+                        </td>
+
+                        <!-- STATUS -->
+                        <td class="px-6 py-4">
+
+                            {% if driver.is_available %}
+
+                                <span class="px-3 py-1 bg-green-700 text-white rounded-full text-xs font-medium">
+                                    Available
+                                </span>
+
+                            {% else %}
+
+                                <span class="px-3 py-1 bg-red-700 text-white rounded-full text-xs font-medium">
+                                    Busy
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <!-- ACTIONS -->
+                        <td class="px-6 py-4">
+
+                            <div class="flex justify-center gap-2">
+
+                                <a href="{% url 'driver_detail' driver.id %}"
+                                   class="w-9 h-9 flex items-center justify-center border rounded-xl hover:bg-gray-100">
+
+                                    <i class="fa fa-eye"></i>
+
+                                </a>
+
+                                <a href="{% url 'driver_update' driver.id %}"
+                                   class="w-9 h-9 flex items-center justify-center border rounded-xl hover:bg-gray-100">
+
+                                    <i class="fa fa-pen"></i>
+
+                                </a>
+
+                               <button
+    onclick="deleteDriver('{{ driver.id }}', this)"
+    class="w-9 h-9 flex items-center justify-center border rounded-xl hover:bg-red-50 text-red-600">
+
+    <i class="fa fa-trash"></i>
+
+</button>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="9"
+                            class="text-center py-16 text-gray-400">
+
+                            No drivers found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function deleteDriver(id, button) {
+
+    if (!confirm("Delete this driver?")) {
+        return;
+    }
+
+    fetch(`/drivers/delete/${id}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCSRFToken()
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if(data.success){
+
+            button.closest("tr").remove();
+
+        } else {
+
+            alert(data.message);
+
+        }
+
+    });
+
+}
+
+function getCSRFToken() {
+
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+
+            const cookie = cookies[i].trim();
+
+            if (cookie.substring(0, 10) === 'csrftoken=') {
+
+                cookieValue = decodeURIComponent(cookie.substring(10));
+
+                break;
+
+            }
+
+        }
+
+    }
+
+    return cookieValue;
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,255 @@
+{% extends "customers/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'customers/header.html' %}
+
+<br><br>
+
+<div class=" min-h-screen py-8">
+
+<div class="max-w-7xl mx-auto px-4">
+
+    <!-- BREADCRUMB -->
+    <div class="mb-4 text-sm text-gray-600">
+
+        <a href="{% url 'customer_material_list' %}"
+           class="hover:text-orange-600">
+            Materials
+        </a>
+
+        <span class="mx-2">›</span>
+
+        <span>{{ material.name }}</span>
+
+    </div>
+
+    <!-- PRODUCT SECTION -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+
+        <div class="grid lg:grid-cols-12 gap-8 p-6">
+
+            <!-- IMAGE -->
+            <div class="lg:col-span-5">
+
+                <div class="sticky top-24">
+
+                    <div class="bg-white border border-gray-200 rounded-lg h-[500px] flex items-center justify-center p-6">
+
+                        {% if material.image %}
+                            <img src="{{ material.image.url }}"
+                                 alt="{{ material.name }}"
+                                 class="max-h-full max-w-full object-contain">
+                        {% else %}
+                            <img src="{% static 'img/default-material.jpg' %}"
+                                 alt="{{ material.name }}"
+                                 class="max-h-full max-w-full object-contain">
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PRODUCT DETAILS -->
+            <div class="lg:col-span-4">
+
+                <div class="text-sm text-blue-600 mb-2">
+                    {{ material.category.name }}
+                </div>
+
+                <h1 class="text-3xl font-normal text-gray-900 leading-tight">
+                    {{ material.name }}
+                </h1>
+
+                <div class="mt-4 border-b pb-4">
+
+                    {% if material.stock_quantity > 0 %}
+                        <span class="text-green-700 font-medium">
+                            In Stock
+                        </span>
+                    {% else %}
+                        <span class="text-red-600 font-medium">
+                            Out of Stock
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <div class="mt-6">
+
+                    <span class="text-sm text-gray-500">
+                        Price
+                    </span>
+
+                    <div class="mt-1">
+
+                        <span class="text-5xl font-light text-red-600">
+                            {{ material.price|intcomma }}
+                        </span>
+
+                        <span class="text-xl text-gray-700">
+                            TZS
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- PRODUCT INFO -->
+                <div class="mt-8">
+
+                    <h3 class="font-semibold text-lg text-gray-800 mb-4">
+                        Material Information
+                    </h3>
+
+                    <table class="w-full border border-gray-200">
+
+                        <tr class="border-b">
+                            <td class="p-3 bg-gray-50 font-medium w-40">
+                                Category
+                            </td>
+                            <td class="p-3">
+                                {{ material.category.name }}
+                            </td>
+                        </tr>
+
+                        <tr class="border-b">
+                            <td class="p-3 bg-gray-50 font-medium">
+                                Unit
+                            </td>
+                            <td class="p-3">
+                                {{ material.unit }}
+                            </td>
+                        </tr>
+
+                        <tr class="border-b">
+                            <td class="p-3 bg-gray-50 font-medium">
+                                Available Stock
+                            </td>
+                            <td class="p-3">
+                                {{ material.stock_quantity }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="p-3 bg-gray-50 font-medium">
+                                Status
+                            </td>
+                            <td class="p-3">
+
+                                {% if material.stock_quantity > 0 %}
+                                    <span class="text-green-700 font-medium">
+                                        Available
+                                    </span>
+                                {% else %}
+                                    <span class="text-red-600 font-medium">
+                                        Out of Stock
+                                    </span>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- AMAZON BUY BOX -->
+            <div class="lg:col-span-3">
+
+                <div class="border border-gray-300 rounded-lg p-5 sticky top-24 bg-white">
+
+                    <div class="text-3xl text-red-600 font-medium">
+                        {{ material.price|intcomma }} TZS
+                    </div>
+
+                    <div class="mt-2 text-sm text-gray-500">
+                        Price per {{ material.unit }}
+                    </div>
+
+                    <hr class="my-4">
+
+                    {% if material.stock_quantity > 0 %}
+
+                        <div class="text-green-700 font-medium">
+                            In Stock
+                        </div>
+
+                        <p class="text-sm text-gray-500 mt-2">
+                            Ready for order request submission.
+                        </p>
+
+                        <a href="{% url 'customer_create_order' material.id %}"
+                           class="mt-5 block w-full text-center bg-yellow-400 hover:bg-yellow-500 text-black py-3 rounded-full font-medium transition">
+
+                            Place Order Request
+
+                        </a>
+
+                    {% else %}
+
+                        <div class="text-red-600 font-medium">
+                            Currently Out of Stock
+                        </div>
+
+                        <button disabled
+                                class="mt-5 block w-full text-center bg-gray-300 text-gray-500 py-3 rounded-full cursor-not-allowed">
+
+                            Unavailable
+
+                        </button>
+
+                    {% endif %}
+
+                    <a href="{% url 'customer_material_list' %}"
+                       class="mt-3 block w-full text-center border border-gray-300 py-3 rounded-full hover:bg-gray-50 transition">
+
+                        Back to Materials
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-8 p-8">
+
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+            Product Description
+        </h2>
+
+        {% if material.description %}
+
+            <div class="text-gray-700 leading-8">
+
+                {{ material.description|linebreaks }}
+
+            </div>
+
+        {% else %}
+
+            <p class="text-gray-500">
+                No description available for this material.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

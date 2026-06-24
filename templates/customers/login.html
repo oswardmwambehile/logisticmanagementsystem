@@ -3,43 +3,66 @@
 
 {% block content %}
 
-
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <div class="min-h-screen flex items-center justify-center px-4">
 
     <div class="w-full max-w-md">
 
-        <!-- TITLE -->
-        <div class="text-center mb-6">
-            <h1 class="text-3xl text-gray-900">
-                Signin to your Platform
-            </h1>
-            
-        </div>
+       
 
         <!-- CARD -->
         <div class="bg-white border border-gray-200 rounded-lg p-6">
 
+             <!-- TITLE -->
+        <!-- TITLE -->
+<div class="text-center mb-6">
+
+    <div class="flex justify-center mb-4">
+        <i class="fas fa-user-circle text-5xl text-green-600"></i>
+    </div>
+
+    <h1 class="text-2xl text-gray-900">
+        Signin to your Platform
+    </h1>
+
+</div>
+
             {% if messages %}
-                {% for message in messages %}
-                    <div class="mb-4 text-sm px-3 py-2 rounded border bg-red-50 border-red-200 text-red-700">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+    {% for message in messages %}
+
+        <div class="
+            mb-4 text-sm px-3 py-2 rounded border
+
+            {% if message.tags == 'success' %}
+                bg-green-50 border-green-200 text-green-700
+            {% elif message.tags == 'error' %}
+                bg-red-50 border-red-200 text-red-700
+            {% elif message.tags == 'warning' %}
+                bg-yellow-50 border-yellow-200 text-yellow-700
+            {% else %}
+                bg-blue-50 border-blue-200 text-blue-700
             {% endif %}
+        ">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+{% endif %}
 
             <form method="POST" class="space-y-5">
                 {% csrf_token %}
 
                 <!-- EMAIL -->
                 <div>
-                    <label class="text-sm font-medium text-gray-700">Email</label>
+                    <label class="text-lg font-medium text-gray-700">Email Address</label>
                     {{ form.username }}
                 </div>
 
                 <!-- PASSWORD -->
                 <div>
-                    <label class="text-sm font-medium text-gray-700">Password</label>
+                    <label class="text-lg font-medium text-gray-700">Password</label>
                     {{ form.password }}
                 </div>
 

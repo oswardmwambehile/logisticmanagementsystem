@@ -1,0 +1,160 @@
+{% extends 'manager/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+<!-- HEADER -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">
+            Order #{{ order.id }} Details
+        </h1>
+        <p class="text-sm text-gray-500">
+            Created {{ order.created_at|naturaltime }}
+        </p>
+    </div>
+
+    <!-- STATUS -->
+    <div>
+        {% if order.status == 'PENDING' %}
+            <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full">Pending</span>
+        {% elif order.status == 'ASSIGNED' %}
+            <span class="px-4 py-2 bg-gray-900 text-white rounded-full">Assigned</span>
+        {% elif order.status == 'ON_ROUTE' %}
+            <span class="px-4 py-2 bg-blue-600 text-white rounded-full">On Route</span>
+        {% elif order.status == 'DELIVERED' %}
+            <span class="px-4 py-2 bg-green-600 text-white rounded-full">Delivered</span>
+        {% else %}
+            <span class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full">{{ order.status }}</span>
+        {% endif %}
+    </div>
+</div>
+
+<!-- INFO CARDS -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+    <!-- CUSTOMER -->
+    <div class="bg-white rounded-2xl shadow p-5 border">
+        <h2 class="font-semibold text-gray-700 mb-3">Customer</h2>
+        <p class="text-lg font-bold">
+            {{ order.customer.first_name }} {{ order.customer.last_name }}
+        </p>
+        <p class="text-sm text-gray-600">📞 {{ order.customer.phone }}</p>
+        <p class="text-sm text-gray-600">✉️ {{ order.customer.email }}</p>
+    </div>
+
+    <!-- DRIVER -->
+    <div class="bg-white rounded-2xl shadow p-5 border">
+        <h2 class="font-semibold text-gray-700 mb-3">Driver</h2>
+
+        {% if order.driver %}
+            <p class="text-lg font-bold">
+                {{ order.driver.first_name }} {{ order.driver.last_name }}
+            </p>
+            <p class="text-sm text-gray-600">📞 {{ order.driver.phone }}</p>
+            <p class="text-sm text-gray-600">🚚 {{ order.driver.vehicle_number }}</p>
+            <p class="text-sm text-gray-600">🪪 {{ order.driver.license_number }}</p>
+        {% else %}
+            <p class="text-red-500">Not Assigned</p>
+        {% endif %}
+    </div>
+
+    <!-- DELIVERY -->
+    <div class="bg-white rounded-2xl shadow p-5 border">
+        <h2 class="font-semibold text-gray-700 mb-3">Delivery</h2>
+        <p class="text-sm text-gray-700">{{ order.delivery_address }}</p>
+        <p class="text-xs text-gray-500 mt-2">
+            {{ order.location|default:"No location" }}
+        </p>
+    </div>
+
+</div>
+
+<!-- MATERIALS -->
+<div class="bg-white rounded-2xl shadow border overflow-hidden">
+
+    <div class="px-6 py-4 bg-gray-50 border-b flex justify-between">
+        <h2 class="font-semibold text-gray-700">Order Materials</h2>
+        <span class="text-sm text-gray-500">Items Breakdown</span>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+
+            <thead class="bg-gray-100 text-gray-600">
+                <tr>
+                    <th class="px-6 py-3 text-left">Material</th>
+                    <th class="px-6 py-3 text-left">Image</th>
+                    <th class="px-6 py-3 text-left">Unit</th>
+                    <th class="px-6 py-3 text-left">Qty</th>
+                    <th class="px-6 py-3 text-left">Unit Price</th>
+                    <th class="px-6 py-3 text-left">Subtotal</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y">
+
+                {% for item in order.items.all %}
+
+                <tr class="hover:bg-gray-50">
+
+                    <td class="px-6 py-4 font-semibold text-gray-800">
+                        {{ item.material.name }}
+                    </td>
+
+                    <!-- IMAGE -->
+                    <td class="px-6 py-4">
+                        {% if item.material.image %}
+                            <img src="{{ item.material.image.url }}"
+                                 class="w-12 h-12 rounded-lg object-cover border">
+                        {% else %}
+                            <div class="w-12 h-12 bg-gray-200 rounded-lg"></div>
+                        {% endif %}
+                    </td>
+
+                    <td class="px-6 py-4 text-gray-600">
+                        {{ item.material.unit }}
+                    </td>
+
+                    <td class="px-6 py-4">
+                        {{ item.quantity|floatformat:2|intcomma }}
+                    </td>
+
+                    <td class="px-6 py-4">
+                        {{ item.unit_price|floatformat:2|intcomma }}
+                    </td>
+
+                    <!-- FIXED SUBTOTAL -->
+                    <td class="px-6 py-4 font-bold text-gray-900">
+                        {{ item.subtotal|floatformat:2|intcomma }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+    </div>
+
+    <!-- TOTAL -->
+    <div class="px-6 py-5 flex justify-end bg-gray-50 border-t">
+        <div class="text-right">
+            <p class="text-sm text-gray-500">Total Cost</p>
+            <p class="text-3xl font-bold text-gray-800">
+                {{ total|floatformat:2|intcomma }}
+            </p>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

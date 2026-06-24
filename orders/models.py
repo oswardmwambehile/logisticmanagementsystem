@@ -29,7 +29,15 @@ class Order(models.Model):
         limit_choices_to={'role': 'DRIVER'}
     )
 
+    # WHERE GOODS WILL BE DELIVERED
     delivery_address = models.TextField()
+
+    # EXTRA FIELD (REAL LOGISTICS NEED THIS)
+    location = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
 
     status = models.CharField(
         max_length=20,
@@ -38,6 +46,9 @@ class Order(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order #{self.id} - {self.customer}"
 
 
 class OrderItem(models.Model):
@@ -48,10 +59,23 @@ class OrderItem(models.Model):
         related_name='items'
     )
 
-    material = models.ForeignKey('materials.Material', on_delete=models.CASCADE)
+    material = models.ForeignKey(
+        'materials.Material',
+        on_delete=models.CASCADE
+    )
 
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    unit_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
 
     def subtotal(self):
         return self.quantity * self.unit_price
+
+    def __str__(self):
+        return f"{self.material.name} x {self.quantity}"

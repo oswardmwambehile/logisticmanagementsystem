@@ -1,0 +1,135 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-6xl">
+
+        <div class="border border-gray-300 rounded-2xl overflow-hidden bg-white">
+
+          <!-- HEADER -->
+<div class="border-b border-gray-300 px-8 py-5">
+
+    <h1 class="text-2xl text-gray-800">
+
+        {% if material %}
+            Update Material
+        {% else %}
+            Create Material
+        {% endif %}
+
+    </h1>
+
+</div>
+
+            <!-- FORM -->
+            <form method="POST" enctype="multipart/form-data" class="p-8">
+
+                {% csrf_token %}
+
+                <div class="space-y-6">
+
+                    <!-- CATEGORY -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+                        <label class="col-span-12 md:col-span-3 text-sm text-gray-700 pt-3">
+                            Category
+                        </label>
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.category }}
+                        </div>
+                    </div>
+
+                    <!-- NAME -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+                        <label class="col-span-12 md:col-span-3 text-sm text-gray-700 pt-3">
+                            Material Name
+                        </label>
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.name }}
+                        </div>
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+                        <label class="col-span-12 md:col-span-3 text-sm text-gray-700 pt-3">
+                            Description
+                        </label>
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.description }}
+                        </div>
+                    </div>
+
+                    <!-- UNIT -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+                        <label class="col-span-12 md:col-span-3 text-sm text-gray-700 pt-3">
+                            Unit
+                        </label>
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.unit }}
+                        </div>
+                    </div>
+
+                    <!-- IMAGE -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+                        <label class="col-span-12 md:col-span-3 text-sm text-gray-700 pt-3">
+                            Image
+                        </label>
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.image }}
+                        </div>
+                    </div>
+
+                    <!-- STOCK -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+                        <label class="col-span-12 md:col-span-3 text-sm text-gray-700 pt-3">
+                            Stock Quantity
+                        </label>
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.stock_quantity }}
+                        </div>
+                    </div>
+
+                    <!-- PRICE -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+                        <label class="col-span-12 md:col-span-3 text-sm text-gray-700 pt-3">
+                            Price
+                        </label>
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.price }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="mt-10 flex items-center gap-4 border-t border-gray-300 pt-6">
+
+                    <button type="submit"
+                        class="px-6 py-3 bg-green-800 text-white rounded-xl hover:bg-green-900">
+
+                        Save Material
+
+                    </button>
+
+                    <a href="#"
+                        class="px-6 py-3 bg-red-700 text-white rounded-xl hover:bg-red-800">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

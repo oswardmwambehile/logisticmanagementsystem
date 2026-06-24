@@ -1,0 +1,158 @@
+{% extends 'manager/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <!-- BACK BUTTON -->
+    <a href="{% url 'material_list' %}"
+       class="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-5">
+
+        <i class="fa fa-arrow-left"></i>
+        Back to Materials
+
+    </a>
+
+    <!-- MAIN CARD -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- LEFT: IMAGE + INFO -->
+        <div class="bg-white border rounded-2xl p-5">
+
+            <!-- IMAGE -->
+            <div class="mb-4">
+                {% if material.image %}
+                    <img src="{{ material.image.url }}"
+                         class="w-full h-60 object-cover rounded-xl border">
+                {% else %}
+                    <div class="w-full h-60 bg-gray-200 rounded-xl"></div>
+                {% endif %}
+            </div>
+
+            <!-- BASIC INFO -->
+            <h2 class="text-xl font-semibold text-gray-800">
+                {{ material.name }}
+            </h2>
+
+            <p class="text-sm text-gray-500 mt-1">
+               <strong>Category :</strong> {{ material.category.name }}
+            </p>
+
+            <div class="mt-4 space-y-2 text-sm">
+
+                <p><strong>Unit:</strong> {{ material.get_unit_display }}</p>
+
+                <p><strong>Price:</strong> {{ material.price|intcomma }}</p>
+
+                <p>
+                    <strong>Stock:</strong>
+
+                    {% if material.stock_quantity <= 5 %}
+                        <span class="text-red-600 font-semibold">
+                            {{ material.stock_quantity }} (Low Stock)
+                        </span>
+                    {% else %}
+                        <span class="text-green-600">
+                            {{ material.stock_quantity }}
+                        </span>
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT: DESCRIPTION + HISTORY -->
+        <div class="md:col-span-2 space-y-6">
+
+            <!-- DESCRIPTION -->
+            <div class="bg-white border rounded-2xl p-5">
+
+                <h3 class="text-lg font-semibold mb-3">Description</h3>
+
+                <p class="text-sm text-gray-600">
+                    {{ material.description|default:"No description available" }}
+                </p>
+
+            </div>
+
+            <!-- STOCK HISTORY -->
+            <div class="bg-white border rounded-2xl p-5">
+
+                <h3 class="text-lg font-semibold mb-4">
+                    Stock Movement History
+                </h3>
+
+                <div class="overflow-x-auto">
+
+                    <table class="w-full text-sm">
+
+                        <thead class="bg-gray-100 text-xs uppercase text-gray-600">
+                            <tr>
+                                <th class="px-4 py-3">Type</th>
+                                <th class="px-4 py-3">Quantity</th>
+                                <th class="px-4 py-3">Note</th>
+                                <th class="px-4 py-3">Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for m in movements %}
+
+                                <tr class="border-b">
+
+                                    <td class="px-4 py-3">
+
+                                        {% if m.movement_type == "IN" %}
+                                            <span class="text-green-600 font-semibold">IN</span>
+                                        {% else %}
+                                            <span class="text-red-600 font-semibold">OUT</span>
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        {{ m.quantity }}
+                                    </td>
+
+                                    <td class="px-4 py-3 text-gray-600">
+                                        {{ m.note|default:"-" }}
+                                    </td>
+
+                                    <td class="px-4 py-3 text-gray-500">
+                                        {{ m.created_at }}
+                                    </td>
+
+                                </tr>
+
+                            {% empty %}
+
+                                <tr>
+                                    <td colspan="4" class="text-center py-6 text-gray-400">
+                                        No stock movement yet
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

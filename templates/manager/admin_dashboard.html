@@ -1,0 +1,229 @@
+{% extends 'manager/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<!-- NAVBAR / SIDEBAR (if you have them) -->
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 mt-16 px-4 md:px-6 py-6 min-h-screen">
+
+    <!-- HEADER -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">
+            Admin Dashboard
+        </h1>
+        
+    </div>
+
+    <!-- ================= KPI CARDS ================= -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
+
+    <!-- TOTAL ORDERS -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500 text-sm">Total Orders</p>
+        <h2 class="text-3xl font-bold text-gray-800">
+            {{ total_orders|intcomma }}
+        </h2>
+    </div>
+
+    <!-- DELIVERED -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500 text-sm">Delivered Orders</p>
+        <h2 class="text-3xl font-bold text-green-600">
+            {{ delivered_orders|intcomma }}
+        </h2>
+    </div>
+
+    <!-- PENDING -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500 text-sm">Pending Orders</p>
+        <h2 class="text-3xl font-bold text-yellow-600">
+            {{ pending_orders|intcomma }}
+        </h2>
+    </div>
+
+    <!-- ON ROUTE -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500 text-sm">On Route Orders</p>
+        <h2 class="text-3xl font-bold text-blue-600">
+            {{ on_route_orders|intcomma }}
+        </h2>
+    </div>
+
+    <!-- REVENUE -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500 text-sm">Revenue</p>
+        <h2 class="text-xl font-bold text-red-600">
+            TZS {{ revenue|floatformat:2|intcomma }}
+        </h2>
+    </div>
+
+</div>
+
+    <!-- ================= SECOND KPI ROW ================= -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+    <!-- CUSTOMERS -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500">Customers</p>
+        <h2 class="text-2xl font-bold text-blue-600">
+            {{ total_customers|intcomma }}
+        </h2>
+    </div>
+
+    <!-- DRIVERS -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500">Drivers</p>
+        <h2 class="text-2xl font-bold text-purple-600">
+            {{ total_drivers|intcomma }}
+        </h2>
+    </div>
+
+    <!-- MATERIALS -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500">Materials</p>
+        <h2 class="text-2xl font-bold text-indigo-600">
+            {{ total_materials|intcomma }}
+        </h2>
+    </div>
+
+    <!-- ASSIGNED ORDERS -->
+    <div class="border border-gray-300 rounded-xl p-6">
+        <p class="text-gray-500">Assigned Orders</p>
+        <h2 class="text-2xl font-bold text-orange-600">
+            {{ assigned_orders|intcomma }}
+        </h2>
+    </div>
+
+</div>
+
+    <!-- ================= CHARTS ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+        <!-- PIE CHART -->
+        <div class="bg-white p-6 rounded-3xl shadow">
+            <h2 class="text-lg font-bold mb-4">Order Status</h2>
+            <canvas id="statusChart"></canvas>
+        </div>
+
+        <!-- LINE CHART (placeholder if you later add revenue_data) -->
+        <div class="bg-white p-6 rounded-3xl shadow">
+            <h2 class="text-lg font-bold mb-4">Revenue Trend</h2>
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+    </div>
+
+    <!-- ================= TABLE + CHAT ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- RECENT ORDERS -->
+        <div class="lg:col-span-2 bg-white p-6 rounded-3xl shadow">
+
+            <h2 class="text-lg font-bold mb-4">Recent Orders</h2>
+
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b text-left text-gray-500">
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Driver</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr class="border-b">
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.customer.first_name }}</td>
+                        <td>
+                            {% if order.driver %}
+                                {{ order.driver.first_name }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="px-2 py-1 text-xs rounded-full
+                                {% if order.status == 'DELIVERED' %}bg-green-100 text-green-600
+                                {% elif order.status == 'PENDING' %}bg-yellow-100 text-yellow-600
+                                {% elif order.status == 'ON_ROUTE' %}bg-blue-100 text-blue-600
+                                {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                {{ order.status }}
+                            </span>
+                        </td>
+                        <td>{{ order.created_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- CHAT PANEL -->
+        <div class="bg-white p-6 rounded-3xl shadow">
+
+            <h2 class="text-lg font-bold mb-4">
+                Chats ({{ unread_chats }} unread)
+            </h2>
+
+            <div class="space-y-4 max-h-[400px] overflow-y-auto">
+
+                {% for chat in recent_chats %}
+                <div class="border-b pb-2">
+                    <p class="font-semibold text-sm">
+                        {{ chat.sender.first_name }}
+                    </p>
+                    <p class="text-gray-500 text-sm truncate">
+                        {{ chat.message }}
+                    </p>
+                    <p class="text-xs text-gray-400">
+                        {{ chat.created_at|date:"H:i" }}
+                    </p>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= CHART JS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // PIE CHART (ORDER STATUS)
+    new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ status_labels|safe }},
+            datasets: [{
+                data: {{ status_data|safe }},
+                backgroundColor: ['#fbbf24', '#3b82f6', '#8b5cf6', '#22c55e']
+            }]
+        }
+    });
+
+    // LINE CHART (PLACEHOLDER)
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+            datasets: [{
+                label: "Revenue",
+                data: [10, 20, 15, 30, 25, 40, 35],
+                borderColor: "#ef4444",
+                fill: true
+            }]
+        }
+    });
+</script>
+
+{% endblock %}

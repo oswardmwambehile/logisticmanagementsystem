@@ -1,0 +1,121 @@
+{% extends "customers/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'customers/header.html' %}
+<br><br>
+
+<div class=" min-h-screen py-10">
+
+    <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-3 gap-6">
+
+        <!-- LEFT: PRODUCT INFO -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- PRODUCT CARD -->
+            <div class="bg-white rounded-xl shadow-sm p-5 flex gap-5">
+
+                <div class="w-40 h-40 bg-gray-100 flex items-center justify-center rounded-lg">
+                    {% if material.image %}
+                        <img src="{{ material.image.url }}" class="object-contain max-h-full">
+                    {% else %}
+                        <img src="{% static 'img/default-material.jpg' %}" class="object-contain max-h-full">
+                    {% endif %}
+                </div>
+
+                <div class="flex-1">
+
+                    <h1 class="text-xl font-bold text-gray-800">
+                        {{ material.name }}
+                    </h1>
+
+                    <p class="text-gray-500 text-sm mt-1">
+                        {{ material.category.name }}
+                    </p>
+
+                    <p class="text-green-700 font-bold text-lg mt-3">
+                        {{ material.price|intcomma  }} TZS
+                    </p>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Stock Available: {{ material.stock_quantity }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- ORDER FORM -->
+            <form method="POST" class="bg-white p-6 rounded-xl shadow-sm space-y-5">
+
+                {% csrf_token %}
+
+                <!-- QUANTITY -->
+                <div>
+    <label class="font-medium text-sm">Quantity</label>
+
+    {{ item_form.quantity }}
+
+    {% if item_form.quantity.errors %}
+        <div class="text-red-500 text-sm mt-1">
+            {% for error in item_form.quantity.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+                <!-- LOCATION -->
+                <div>
+                    <label class="font-medium text-sm">Location</label>
+                    {{ order_form.location }}
+                </div>
+
+                <!-- DELIVERY ADDRESS -->
+                <div>
+                    <label class="font-medium text-sm">Delivery Address</label>
+                    {{ order_form.delivery_address }}
+                </div>
+
+                <!-- BUTTON -->
+                <button type="submit"
+                        class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-xl">
+
+                    Place Order
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- RIGHT: SUMMARY (AMAZON STYLE SIDEBAR) -->
+        <div class="bg-white p-5 rounded-xl shadow-sm h-fit sticky top-24">
+
+            <h2 class="font-bold text-lg mb-4">Order Summary</h2>
+
+            <div class="flex justify-between text-sm mb-2">
+                <span>Price</span>
+                <span>{{ material.price|intcomma  }} TZS</span>
+            </div>
+
+            <div class="flex justify-between text-sm mb-2">
+                <span>Stock</span>
+                <span>{{ material.stock_quantity }}</span>
+            </div>
+
+            <div class="border-t pt-3 mt-3">
+                <p class="text-xs text-gray-500">
+                    Final price will be calculated after quantity selection
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
